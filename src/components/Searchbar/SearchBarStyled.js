@@ -73,7 +73,7 @@ export const SearchFormStyled = styled.form`
   button {
     display: inline-block;
     width: 60px;
-    height: 40px;
+    height: 38px;
     border: 0;
     background-image: url('https://image.flaticon.com/icons/svg/149/149852.svg');
     background-size: 40%;

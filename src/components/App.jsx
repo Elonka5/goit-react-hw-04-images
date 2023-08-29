@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { SearchBar } from './Searchbar/Searchbar';
 import { getImages } from 'service/galleryService';
@@ -9,96 +9,70 @@ import { ImageSearchEmpty } from './ImageSearchEmpty/ImageSearchEmpty';
 import { ImageError } from 'components/ImageError/ImageError';
 import { ImageDefault } from './ImageDefault/ImageDefault';
 
-export class App extends Component {
-  state = {
-    query: '',
-    page: 1,
-    hits: [],
-    showBtn: false,
-    showImageDefault: true,
-    showImageSearchEmpty: false,
-    showImageError: false,
-    src: '',
-    alt: '',
-    isLoading: false,
+export const App = () => {
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [hits, setHits] = useState([]);
+  const [showBtn, setShowBtn] = useState(false);
+  const [showImageDefault, setShowImageDefault] = useState(true);
+  const [showImageSearchEmpty, setShowImageSearchEmpty] = useState(false);
+  const [showImageError, setShowImageError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [src, setSrc] = useState('');
+  const [alt, setAlt] = useState('');
+
+  useEffect(() => {
+    if (!query) return;
+    setIsLoading(true);
+    getImages(query, page)
+      .then(({ hits, totalHits }) => {
+        if (!totalHits) {
+          setShowImageSearchEmpty(true);
+          setShowImageDefault(false);
+          return;
+        }
+        setHits(prevState => [...prevState, ...hits]);
+        setShowBtn(page < Math.ceil(totalHits / 12));
+        setShowImageDefault(false);
+      })
+      .catch(error => {
+        setShowImageError(error.message);
+        setShowImageDefault(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [query, page]);
+
+  const handleSubmit = query => {
+    setQuery(query);
+    setPage(1);
+    setHits([]);
+    setShowImageDefault(true);
+    setShowImageSearchEmpty(false);
+    setShowImageError(false);
+  };
+  const loadMore = () => {
+    setPage(prevState => prevState + 1);
   };
 
-  componentDidUpdate(_, prevState) {
-    const { query, page } = this.state;
-    if (query !== prevState.query || page !== prevState.page) {
-      this.setState({ isLoading: true, showImageDefault: false });
-      getImages(query, page)
-        .then(({ hits, totalHits }) => {
-          if (!totalHits) {
-            this.setState({
-              showImageSearchEmpty: true,
-              showImageDefault: false,
-            });
-            return;
-          }
-          this.setState(prevState => ({
-            hits: [...prevState.hits, ...hits],
-            showBtn: page < Math.ceil(totalHits / 12),
-            showImageDefault: false,
-          }));
-        })
-        .catch(error => {
-          this.setState({
-            showImageError: error.message,
-            showImageDefault: false,
-          });
-        })
-        .finally(() => {
-          this.setState({ isLoading: false });
-        });
-    }
-  }
-
-  handleSubmit = query => {
-    this.setState({
-      query,
-      page: 1,
-      hits: [],
-      showImageDefault: true,
-      showImageSearchEmpty: false,
-      showImageError: false,
-    });
+  const handleOpenModal = ({ src, alt }) => {
+    setSrc(src);
+    setAlt(alt);
   };
 
-  loadMore = () => {
-    this.setState(prevState => ({ page: prevState.page + 1 }));
-  };
-
-  handleOpenModal = ({ src, alt }) => {
-    this.setState({ src, alt });
-  };
-
-  render() {
-    const {
-      hits,
-      showBtn,
-      showImageDefault,
-      showImageSearchEmpty,
-      showImageError,
-      src,
-      alt,
-      isLoading,
-    } = this.state;
-    return (
-      <div className="container">
-        <SearchBar onSubmit={this.handleSubmit} />
-        {showImageDefault && (
-          <ImageDefault text="Let's find images together!" />
-        )}
-        <ImageGallery images={hits} openModal={this.handleOpenModal} />
-        {showBtn && <Button handleClick={this.loadMore} text="Load More" />}
-        {showImageSearchEmpty && (
-          <ImageSearchEmpty text="Oops... there are no images matching your search..." />
-        )}
-        {showImageError && <ImageError text="Something goes wrong..." />}
-        {src && <Modal closeModal={this.handleOpenModal} src={src} alt={alt} />}
-        {isLoading && <Loader />}
-      </div>
-    );
-  }
-}
+  return (
+    <div className="container">
+      <SearchBar onSubmit={handleSubmit} />
+      {showImageDefault && <ImageDefault text="Let's find images together!" />}
+      <ImageGallery images={hits} openModal={handleOpenModal} />
+      {showBtn && <Button handleClick={loadMore} text="Load More" />}
+      {showImageSearchEmpty && (
+        <ImageSearchEmpty text="Oops... there are no images matching your search..." />
+      )}
+      {showImageError && <ImageError text="Something goes wrong..." />}
+      {src && <Modal closeModal={handleOpenModal} src={src} alt={alt} />}
+      {isLoading && <Loader />}
+    </div>
+  );
+};
