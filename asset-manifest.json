@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/goit-react-hw-04-images/static/css/main.b8755bf8.css",
-    "main.js": "/goit-react-hw-04-images/static/js/main.7e4e9fe3.js",
+    "main.js": "/goit-react-hw-04-images/static/js/main.57684a8e.js",
     "static/media/Group-Minions-PNG-Photo.png": "/goit-react-hw-04-images/static/media/Group-Minions-PNG-Photo.5ee1690def98215ea084.png",
     "static/media/Minions-PNG-Transparent-Image.png": "/goit-react-hw-04-images/static/media/Minions-PNG-Transparent-Image.3a287eb00a57762e2ced.png",
     "static/media/Group-Minions-Transparent-PNG.png": "/goit-react-hw-04-images/static/media/Group-Minions-Transparent-PNG.c9c159ef1a65bf51b5db.png",
     "static/media/Minions-PNG.png": "/goit-react-hw-04-images/static/media/Minions-PNG.538e81593cbafb227f94.png",
     "index.html": "/goit-react-hw-04-images/index.html",
     "main.b8755bf8.css.map": "/goit-react-hw-04-images/static/css/main.b8755bf8.css.map",
-    "main.7e4e9fe3.js.map": "/goit-react-hw-04-images/static/js/main.7e4e9fe3.js.map"
+    "main.57684a8e.js.map": "/goit-react-hw-04-images/static/js/main.57684a8e.js.map"
   },
   "entrypoints": [
     "static/css/main.b8755bf8.css",
-    "static/js/main.7e4e9fe3.js"
+    "static/js/main.57684a8e.js"
   ]
 }
