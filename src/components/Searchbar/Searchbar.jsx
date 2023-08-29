@@ -1,39 +1,34 @@
-import { Component } from 'react';
+import {useState } from 'react';
 import { SearchBarStyled, SearchFormStyled } from './SearchBarStyled';
 
-export class SearchBar extends Component {
-  state = {
-    value: '',
+export const SearchBar = ({ onFormSubmit }) => {
+  const [query, setQuery] = useState('');
+  
+  const handleChange = evt => {
+    setQuery(evt.target.value.toLowerCase().trim());
   };
 
-  handleChange = evt => {
-    this.setState({ value: evt.target.value });
-  };
-
-  handleSubmit = evt => {
+    const handleSubmit = evt => {
     evt.preventDefault();
-    const { value } = this.state;
-    if (!value.trim()) {
+    if (query.trim() === '') {
       alert('Write something');
       return;
     }
-
-    this.props.onSubmit(value);
-    this.setState({ value: '' });
+    onFormSubmit(query);
+    setQuery('');
   };
 
-  render() {
-    return (
+  return (
       <SearchBarStyled className="searchbar">
-        <SearchFormStyled className="form" onSubmit={this.handleSubmit}>
+        <SearchFormStyled className="form" onSubmit={handleSubmit}>
           <input
-            value={this.state.value}
+            value={query}
             className="input"
             type="text"
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
-            onChange={this.handleChange}
+            onChange={handleChange}
           />
           <button type="submit" className="button">
             <span className="button-label">Search</span>
@@ -41,5 +36,4 @@ export class SearchBar extends Component {
         </SearchFormStyled>
       </SearchBarStyled>
     );
-  }
 }
