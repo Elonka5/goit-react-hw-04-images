@@ -63,7 +63,7 @@ export const App = () => {
 
   return (
     <div className="container">
-      <SearchBar onSubmit={handleSubmit} />
+      <SearchBar onFormSubmit={handleSubmit} />
       {showImageDefault && <ImageDefault text="Let's find images together!" />}
       <ImageGallery images={hits} openModal={handleOpenModal} />
       {showBtn && <Button handleClick={loadMore} text="Load More" />}
