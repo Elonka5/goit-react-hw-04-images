@@ -19,7 +19,7 @@ export const Modal = ({ closeModal, src, alt }) => {
 
   const handleOverLay = evt => {
     if (evt.target === evt.currentTarget) {
-      this.props.closeModal({ src: '', alt: '' });
+    closeModal({ src: '', alt: '' });
     }
   };
   return (
